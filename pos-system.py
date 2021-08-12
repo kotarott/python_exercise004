@@ -5,10 +5,10 @@ import datetime
 
 ### 商品クラス
 class Item:
-    def __init__(self,item_code,item_name,price):
-        self.item_code=item_code
-        self.item_name=item_name
-        self.price=price
+    def __init__(self, item_code, item_name, price):
+        self.item_code = item_code
+        self.item_name = item_name
+        self.price = price
     
     def get_price(self):
         return self.price
@@ -18,7 +18,7 @@ class Order:
     def __init__(self,item_master):
         self.item_order_list = []
         self.item_master = item_master
-        self.item_sum = 0
+        self.item_total_price = 0
         self.payment = 0
         self.orders = []
     
@@ -37,16 +37,16 @@ class Order:
                     )
                     self.orders.append([item[0], master.item_name, master.get_price(), item[1], master.get_price() * item[1]])
     
-    def sum(self):
+    def calc_total_price(self):
         for item in self.item_order_list:
             for master in self.item_master:
                 if item[0] == master.item_code:
-                    self.item_sum += item[1] * master.get_price()
+                    self.item_total_price += item[1] * master.get_price()
 
     def get_oturi(self, payment):
-        self.sum()
+        self.calc_total_price()
         self.payment = payment
-        return self.payment - self.item_sum
+        return self.payment - self.item_total_price
         
 
 ### メイン処理
@@ -110,7 +110,7 @@ def output(order):
             f.write("\n")
             f.write(",".join(map(str, item)))
         f.write("\n\n")
-        f.write(",".join(["合計金額:", str(order.item_sum), "支払額:", str(order.payment), "お釣り:", str(order.payment - order.item_sum)]))
+        f.write(",".join(["合計金額:", str(order.item_total_price), "支払額:", str(order.payment), "お釣り:", str(order.payment - order.item_total_price)]))
     
 if __name__ == "__main__":
     main()
